@@ -80,9 +80,9 @@ search.addEventListener('click', () => {
             const sunset = new Date(json.sys.sunset * 1000);
             const currentTime = new Date();
 
-            // Check if current time is between sunrise and sunset
+            
             if (currentTime > sunrise && currentTime < sunset) {
-                // Fetch UV index data using latitude and longitude from the current weather
+                
                 fetch(`https://api.openweathermap.org/data/2.5/uvi?lat=${json.coord.lat}&lon=${json.coord.lon}&appid=${APIKey}`)
                     .then(response => response.json())
                     .then(uvData => {
@@ -90,7 +90,7 @@ search.addEventListener('click', () => {
                     })
                     .catch(error => {
                         console.error('Error fetching UV data:', error);
-                        uvIndex.innerHTML = 'N/A'; // Display 'N/A' if UV data fetch fails
+                        uvIndex.innerHTML = 'N/A'; 
                     });
             } else {
                 uvIndex.innerHTML = 'Night time';
@@ -109,15 +109,15 @@ search.addEventListener('click', () => {
             fetch(`https://api.openweathermap.org/data/2.5/forecast?q=${city}&units=metric&appid=${APIKey}`)
             .then(response => response.json())
             .then(forecastData => {
-                // Show forecast section and title
+                
                 forecastSection.style.display = 'block';
                 forecastTitle.style.display = 'block';
 
-                // Clear previous forecast data
+                
                 forecastDetails.innerHTML = '';
                 forecastTitle.textContent = '5-Day Forecast';
 
-                // Extract and display the forecast for the next 5 days
+                
                 const nextFiveDaysData = forecastData.list.filter(item => item.dt_txt.includes('12:00:00'));
 
                 nextFiveDaysData.forEach(dayData => {
