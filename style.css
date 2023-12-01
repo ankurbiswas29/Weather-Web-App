@@ -328,60 +328,53 @@ body{
 }
 
 @media only screen and (max-width: 600px) {
-    body {
-      background: #06283D;
-      margin: 0;
-    }
-  
-    .container {
-      width: 90%;
-      padding: 20px; /* Adjust padding for smaller screens */
-    }
-  
-    .search-box {
-      flex-direction: column; /* Stack items vertically for smaller screens */
-      align-items: flex-start; /* Align items to the start */
-    }
-  
-    .search-box input,
-    .search-box button {
-      width: 100%; /* Full width for input and button */
-    }
-  
-    .search-box button {
-      margin-top: 10px; /* Add some spacing between input and button */
-    }
-  
-    .weather-box img {
-      width: 40%; /* Adjust image size for smaller screens */
-      margin-top: 10px; /* Add spacing between image and temperature */
-    }
-  
-    .weather-box .temperature {
-      font-size: 24px;
-      margin-top: 10px;
-    }
-  
-    .weather-details,
-    .forecast-details,
-    .forecast-details h3,
-    .forecast-details p,
-    .forecast-details .temperature,
-    .forecast h2,
-    .not-found {
-      font-size: 14px; /* Adjust font size for smaller screens */
-    }
-  
-    .forecast-details .forecast-card {
-      width: calc(50% - 20px); /* Adjust width for smaller screens */
-      margin-bottom: 20px; /* Add spacing between forecast cards */
-    }
-  
-    .not-found {
-      margin-top: 20px; /* Adjust margin for smaller screens */
-    }
-  
-    .not-found img {
-      width: 100%; /* Make sure the image spans the full width */
-    }
+  body {
+    background: #06283D;
+    margin: 0;
+    font-size: 14px; /* Adjust the base font size for smaller screens */
   }
+
+  .container {
+    width: 90%;
+    padding: 20px;
+    box-sizing: content-box; /* Adjust box-sizing for padding */
+  }
+
+  .search-box {
+    flex-direction: column;
+    align-items: stretch; /* Allow items to stretch to full width */
+  }
+
+  .search-box input,
+  .search-box button {
+    width: 100%;
+    margin-top: 10px; /* Add some spacing between input and button */
+  }
+
+  .weather-box img {
+    width: 80%;
+    margin-top: 20px; /* Adjust spacing between image and temperature */
+  }
+
+  .weather-box .temperature {
+    font-size: 24px;
+    margin-top: 10px;
+  }
+
+  .forecast-details {
+    margin-top: 20px; /* Adjust margin between weather details and forecast */
+  }
+
+  .forecast-details .forecast-card {
+    width: 100%; /* Make forecast cards span the full width */
+    margin-bottom: 20px;
+  }
+
+  .not-found {
+    margin-top: 20px;
+  }
+
+  .not-found img {
+    width: 100%;
+  }
+}
