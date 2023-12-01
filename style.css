@@ -12,7 +12,7 @@ body{
     align-items: center;
     justify-content: center;
     background: #06283D;
-    background-image: url(images/desktopbg.jpg)
+    background-image: url(images/desktopbg.jpg);
 }
 
 .container{
