@@ -29,5 +29,7 @@ Through collaborative efforts utilizing HTML, CSS, JavaScript, and other relevan
 Through collaborative efforts utilizing HTML, CSS, JavaScript, and other relevant technologies, our team successfully created a functional and engaging Weather Web Application for our minor project.
 
 # Screenshots:
-![screenshot](Screenshot1.jpg)
-![screenshot](Screenshot2.jpg)
+![screenshot](Screenshot1(Desktop).png)
+![screenshot](Screenshot2(Desktop).jpg)
+![screenshot](Screenshot1(Mobile).jpg)
+![screenshot](Screenshot2(Mobile).jpg)
