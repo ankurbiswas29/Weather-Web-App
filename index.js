@@ -47,7 +47,7 @@ if ('geolocation' in navigator && window.location.protocol === 'https:') {
           handleNotFoundError();
         } else {
           handleWeatherData(json);
-          fetchForecastData(urlForecast);
+          fetchForecastData(urlForecast); // Pass forecast URL
         }
       })
       .catch(error => {
@@ -65,11 +65,7 @@ if ('geolocation' in navigator && window.location.protocol === 'https:') {
         return response.json();
       })
       .then(forecastData => {
-        if (forecastData.cod === '404') {
-          handleForecastNotFoundError();
-        } else {
-          handleForecastData(forecastData);
-        }
+        handleForecastData(forecastData);
       })
       .catch(error => {
         console.error('Error fetching forecast data:', error);
@@ -82,7 +78,7 @@ if ('geolocation' in navigator && window.location.protocol === 'https:') {
   }
   
   function handleForecastData(data) {
-    // Handle display of forecast data
+    // Handle display of 5-day forecast data
   }
   
   function handleNotFoundError() {
@@ -95,19 +91,14 @@ if ('geolocation' in navigator && window.location.protocol === 'https:') {
     forecastTitle.style.display = 'none';
   }
   
-  function handleForecastNotFoundError() {
-    console.error('Error fetching forecast data: City not found');
-    // Handle forecast data error message for city not found
-  }
-  
   function handleFallbackData(city) {
     console.error('Error fetching weather data for', city);
-    // Handle fallback data or display error message for weather data
+    // Handle fallback data or display error message
   }
   
   function handleForecastFallbackData() {
     console.error('Error fetching forecast data.');
-    // Handle fallback data or display error message for forecast data
+    // Handle fallback data or display error message
   }
   
   // Call fetchWeatherData with appropriate parameters
