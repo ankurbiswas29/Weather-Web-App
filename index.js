@@ -27,31 +27,52 @@ if ('geolocation' in navigator && window.location.protocol === 'https:') {
   
   function fetchWeatherData(city = 'Kolkata', latitude = null, longitude = null) {
     const APIKey = 'e6e25c2cecd2759cff082b91f149e349';
-    let url;
+    let urlCurrentWeather, urlForecast;
   
     if (city) {
-      url = `https://api.openweathermap.org/data/2.5/weather?q=${city}&units=metric&appid=${APIKey}`;
+      urlCurrentWeather = `https://api.openweathermap.org/data/2.5/weather?q=${city}&units=metric&appid=${APIKey}`;
+      urlForecast = `https://api.openweathermap.org/data/2.5/forecast?q=${city}&units=metric&appid=${APIKey}`;
     } else if (latitude !== null && longitude !== null) {
-      url = `https://api.openweathermap.org/data/2.5/weather?lat=${latitude}&lon=${longitude}&units=metric&appid=${APIKey}`;
+      urlCurrentWeather = `https://api.openweathermap.org/data/2.5/weather?lat=${latitude}&lon=${longitude}&units=metric&appid=${APIKey}`;
+      urlForecast = `https://api.openweathermap.org/data/2.5/forecast?lat=${latitude}&lon=${longitude}&units=metric&appid=${APIKey}`;
     } else {
       console.error('Invalid parameters for fetching weather data.');
       return;
     }
   
-    fetch(url)
+    fetch(urlCurrentWeather)
       .then(response => response.json())
       .then(json => {
         if (json.cod === '404') {
           handleNotFoundError();
         } else {
           handleWeatherData(json);
-          fetchForecastData(city);
+          fetchForecastData(urlForecast);
         }
       })
       .catch(error => {
         console.error('Error fetching weather data:', error);
         handleFallbackData(city);
       });
+  }
+  
+  function fetchForecastData(urlForecast) {
+    fetch(urlForecast)
+      .then(response => response.json())
+      .then(forecastData => {
+        handleForecastData(forecastData);
+      })
+      .catch(error => {
+        console.error('Error fetching forecast data:', error);
+      });
+  }
+  
+  function handleWeatherData(data) {
+    // Handle display of current weather data
+  }
+  
+  function handleForecastData(data) {
+    // Handle display of forecast data
   }
   
   function handleNotFoundError() {
@@ -69,5 +90,6 @@ if ('geolocation' in navigator && window.location.protocol === 'https:') {
     // Handle fallback data or display error message
   }
   
-  // Other functions for handling weather data and forecast data display
+  // Call fetchWeatherData with appropriate parameters
+  fetchWeatherData('Kolkata'); // Or use geolocation to get the city dynamically
   
