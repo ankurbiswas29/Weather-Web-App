@@ -58,12 +58,22 @@ if ('geolocation' in navigator && window.location.protocol === 'https:') {
   
   function fetchForecastData(urlForecast) {
     fetch(urlForecast)
-      .then(response => response.json())
+      .then(response => {
+        if (!response.ok) {
+          throw new Error('Forecast data request failed');
+        }
+        return response.json();
+      })
       .then(forecastData => {
-        handleForecastData(forecastData);
+        if (forecastData.cod === '404') {
+          handleForecastNotFoundError();
+        } else {
+          handleForecastData(forecastData);
+        }
       })
       .catch(error => {
         console.error('Error fetching forecast data:', error);
+        handleForecastFallbackData();
       });
   }
   
@@ -85,9 +95,19 @@ if ('geolocation' in navigator && window.location.protocol === 'https:') {
     forecastTitle.style.display = 'none';
   }
   
+  function handleForecastNotFoundError() {
+    console.error('Error fetching forecast data: City not found');
+    // Handle forecast data error message for city not found
+  }
+  
   function handleFallbackData(city) {
     console.error('Error fetching weather data for', city);
-    // Handle fallback data or display error message
+    // Handle fallback data or display error message for weather data
+  }
+  
+  function handleForecastFallbackData() {
+    console.error('Error fetching forecast data.');
+    // Handle fallback data or display error message for forecast data
   }
   
   // Call fetchWeatherData with appropriate parameters
