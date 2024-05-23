@@ -1,4 +1,6 @@
-*{
+@import url('https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;800&display=swap');
+
+* {
     margin: 0;
     padding: 0;
     border: 0;
@@ -6,16 +8,17 @@
     box-sizing: border-box;
 }
 
-body{
+body {
     height: 100vh;
     display: flex;
     align-items: center;
     justify-content: center;
     background: #06283D;
     background-image: url(images/desktopbg.jpg);
+    font-family: 'Roboto', sans-serif;
 }
 
-.container{
+.container {
     position: absolute;
     width: 600px;
     height: 100px;
@@ -23,18 +26,18 @@ body{
     padding: 28px 32px;
     overflow: hidden;
     border-radius: 28px;
-    font-family: 'Roboto', sans-serif;
     transition: 0.6s ease-out;
 }
 
-.search-box{    
-    width: 100%;    height: min-content;
+.search-box {
+    width: 100%;
+    height: min-content;
     display: flex;
     align-items: center;
     justify-content: space-between;
 }
 
-.search-box input{
+.search-box input {
     color: #06283D;
     width: 80%;
     font-size: 24px;
@@ -43,14 +46,14 @@ body{
     padding-left: 32px;
 }
 
-.search-box input::placeholder{
+.search-box input::placeholder {
     font-size: 20px;
     font-weight: 500;
     color: #06283D;
     text-transform: capitalize;
 }
 
-.search-box button{
+.search-box button {
     cursor: pointer;
     width: 50px;
     height: 50px;
@@ -61,12 +64,12 @@ body{
     transition: 0.4s ease;
 }
 
-.search-box button:hover{
+.search-box button:hover {
     color: #fff;
     background: #06283D;
 }
 
-.search-box i{
+.search-box i {
     position: absolute;
     color: #06283D;
     font-size: 28px;
@@ -75,61 +78,62 @@ body{
 .not-found {
     position: relative;
     font-size: 5px;
-   
 }
 
-.weather-box{
+.weather-box {
     text-align: center;
-    margin-bottom: 10px
+    margin-bottom: 10px;
 }
 
-.weather-box img{
+.weather-box img {
     width: 20%;
     margin-top: 5px;
 }
 
-.weather-box .temperature{
-    position: relative;
+.weather-box .temperature {
     color: #06283D;
     font-size: 30px;
     font-weight: 800;
     margin-top: 10px;
 }
 
-.weather-box .temperature span{
-    position: absolute;
+.weather-box .temperature span {
     margin-left: 4px;
     font-size: 1.5rem;
 }
 
-.weather-box .description{
+.weather-box .description {
     color: #06283D;
     font-size: 20px;
     font-weight: 500;
     text-transform: capitalize;
 }
 
-.weather-details{
-    width: 110%;
+.weather-details {
+    width: 100%;
     display: flex;
-    justify-content: center;
+    justify-content: space-around;
     margin-top: 10px;
-    font-size: 5px;
+    font-size: 16px;
 }
 
-.weather-details .humidity, .weather-details .wind, .weather-details .pressure, .weather-details .uv-index, .weather-details .visibility{
+.weather-details .humidity,
+.weather-details .wind,
+.weather-details .pressure,
+.weather-details .uv-index,
+.weather-details .visibility {
     display: -ms-grid;
     align-items: center;
     width: 50%;
-    height: 110px
+    height: 110px;
 }
 
-.weather-details .humidity{
+.weather-details .humidity {
     padding-left: 20px;
     justify-content: flex-start;
 }
 
-.weather-details .wind{
+.weather-details .wind {
     padding: 20px;
     justify-content: space-between;
 }
@@ -141,7 +145,7 @@ body{
 
 .weather-details .uv-index {
     padding: 20px;
-    justify-content: space-between; 
+    justify-content: space-between;
 }
 
 .weather-details .visibility {
@@ -149,31 +153,26 @@ body{
     justify-content: flex-end;
 }
 
-.weather-details i{
+.weather-details i {
     color: #06283D;
     font-size: 20px;
     margin-right: 10px;
     margin-top: 6px;
 }
 
-.weather-details span{
+.weather-details span,
+.weather-details p {
     color: #06283D;
     font-size: 15px;
     font-weight: 500;
 }
 
-.weather-details p{
-    color: #06283D;
-    font-size: 12px;
-    font-weight: 500;
-}
-
 .forecast-details {
     display: flex;
-    flex-wrap: wrap;
     justify-content: center;
-    margin-top: 10px;
-    max-width: 100%; 
+    flex-wrap: wrap;
+    margin-top: 10px; /* Adjusted margin-top for better visibility */
+    max-width: 100%;
 }
 
 .forecast-details .forecast-card {
@@ -181,29 +180,43 @@ body{
     border-radius: 30px;
     padding: 1px;
     text-align: center;
-    width: calc(20% - 20px); 
+    width: calc(20% - 20px);
+    margin: 8px;
+    margin-bottom: 4%; /* Increase margin-bottom to create more space */
+    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.1);
+    transition: transform 0.3s ease-in-out;
+    position: relative;
+    overflow: hidden;
+}
+
+/*.forecast-details .forecast-card {
+    background-color: #06283D;
+    border-radius: 30px;
+    padding: 10px;
+    text-align: center;
+    width: calc(20% - 20px);
     margin: 10px;
     box-shadow: 0 8px 16px rgba(0, 0, 0, 0.1);
     transition: transform 0.3s ease-in-out;
     position: relative;
-    overflow: hidden;   
-}
+    overflow: hidden;
+}*/
 
 .forecast-details .forecast-card:hover {
-    transform: translateY(-5px); 
-    box-shadow: 0 12px 20px rgba(0, 0, 0, 0.15); 
+    transform: translateY(-5px);
+    box-shadow: 0 12px 20px rgba(0, 0, 0, 0.15);
 }
 
-.forecast-details p {
+.forecast-details .forecast-card p {
     font-size: 14px;
     color: #ffffff;
-    margin-bottom: 8px;
+    margin-bottom: 1px;
 }
 
-.forecast-details .temperature {
+.forecast-details .forecast-card .temperature {
     font-size: 24px;
     font-weight: bold;
-    color: #06283D;
+    color: #ffffff;
     margin-bottom: 15px;
 }
 
@@ -222,12 +235,12 @@ body{
 .forecast h2 {
     color: #06283D;
     font-size: 20px;
-    margin-bottom: 10px;
+    margin-bottom: 1px;
     margin-top: 1%;
     text-align: center;
 }
 
-.not-found{
+.not-found {
     width: 100%;
     text-align: center;
     margin-top: 50px;
@@ -236,186 +249,132 @@ body{
     display: none;
 }
 
-.not-found img{
+.not-found img {
     width: 50%;
 }
 
-.not-found p{
+.not-found p {
     color: #06283D;
     font-size: 20px;
     font-weight: 500;
     margin-top: 12px;
 }
 
-.weather-box, .weather-details{
+.weather-box,
+.weather-details {
     scale: 0;
     opacity: 0;
 }
 
-.fadeIn{
+.fadeIn {
     animation: 0.5s fadeIn forwards;
     animation-delay: 0.5s;
 }
 
-@keyframes fadeIn{
+@keyframes fadeIn {
     to {
         scale: 1;
         opacity: 1;
     }
 }
 
-@media only screen and (max-width: 600px) {
+.hourly-forecast {
+    margin-top: 40px;
+    text-align: center;
+}
 
-    body{
-      background-image: url(images/mobilebg.jpg)
-    }
-      
-    .container {
-      width: 90%;
-      padding: 20px; 
-    }  
+.hourly-forecast h2 {
+    color: #06283D;
+    font-size: 20px;
+    margin-bottom: 20px;
+}
 
-    .search-box input{
-        width: 80%;
-        font-size: 12px;
-    }
-    
-    .search-box input::placeholder{
-        font-size: 12px;
-        
-    }
-  
-    .search-box button {
-      margin-top: 10px; 
-      width: 20%;
-    }
+.hourly-details {
+    display: flex;
+    flex-wrap: nowrap;
+    justify-content: center;
+    overflow-x: auto;
+    padding-bottom: 10px;
+    -webkit-overflow-scrolling: touch; /* For smooth scrolling on iOS */
+}
 
-    .search-box button:hover{
-        font-size: 12px;        
-    }
-    
-    .search-box i{
-        position: absolute;
-        font-size: 20px;
-    }    
-  
-    .weather-box img {
-      width: 20%; 
-      margin-top: 0px;
-      margin-top: -15px;
-    }
-  
-    .weather-box .temperature {
-      font-size: 17px;
-      margin-top: 8px;
-      align-items: center;
-    }
+.hourly-details .hourly-card {
+    background-color: #06283D;
+    border-radius: 30px;
+    padding: 10px;
+    text-align: center;
+    width: 100px;
+    margin: 0 10px;
+    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.1);
+    transition: transform 0.3s ease-in-out;
+    cursor: pointer; /* Add cursor pointer for modal trigger */
+}
 
-    .weather-box .temperature span{
-        position: absolute;
-        font-size: 1rem;
-    }
-    
-    .weather-box .description{
-        color: #06283D;
-        font-size: 16px;
-    }
+.hourly-details .hourly-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 12px 20px rgba(0, 0, 0, 0.15);
+}
 
-    .weather-details{
-        width: 105%;
-        margin-top: -17px;
-        display: flex;
-        justify-content: center;
-        font-size: 1px;
-        
-    }
-  
-    .weather-details .humidity, .weather-details .wind, .weather-details .pressure, .weather-details .uv-index, .weather-details .visibility{
-        display: -ms-grid;
-        align-items: center;
-        width: 25%;
-        height: 105px;
-    }
-        
-    .weather-details .humidity{
-        padding-left: 20px;
-        justify-content: flex-start;
-    }
-    
-    .weather-details .wind{
-        padding: 20px;
-        justify-content: space-between;
-    }
-    
-    .weather-details .pressure {
-        padding: 20px;
-        justify-content: center;
-    }
-    
-    .weather-details .uv-index {
-        padding: 20px;
-        justify-content: space-between; 
-    }
-    
-    .weather-details .visibility {
-        padding-right: 20px;
-        justify-content: flex-end;
-    }
-    
-    .weather-details i{
-        font-size: 20px;
-        margin-right: 10px;
-        margin-top: 6px;
-    }
-    
-    .weather-details span{     
-        font-size: 12px;
-    }    
-    
-    .weather-details p{     
-        font-size: 10px;
-    }    
-    
-    .forecast-details .forecast-card {
-      width: calc(50% - 20px); 
-      margin-bottom: 20px; 
-    }
-  
-    .not-found {
-      margin-top: 20px; 
-    }
-  
-    .not-found img {
-      width: 70%; 
-    }
+.hourly-details .hourly-card p {
+    font-size: 14px;
+    color: #ffffff;
+    margin-bottom: 8px;
+}
 
-    .forecast-details {
-      margin-top: 10px;
-      max-width: 100%;
-    }
+.hourly-details .hourly-card .temperature {
+    font-size: 20px;
+    font-weight: bold;
+    color: #ffffff;
+    margin-bottom: 5px;
+}
 
-    .forecast-details .forecast-card {
-        border-radius: 20px;
-        padding: 1px;
-        text-align: center;
-        width: calc(25% - 0px); 
-        height: 120px;     
-        margin: 5px;
-    }
+/* Modal */
+.modal {
+    display: none;
+    position: fixed;
+    z-index: 1;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    overflow: auto;
+    background-color: rgba(0, 0, 0, 0.5);
+}
 
-    .forecast-details p {
-        font-size: 10px;  
-        margin-top: 2px;
-        margin-bottom: -2px;}
-    
-    .forecast-details .temperature {
-        font-size: 20px;    
-        margin-bottom: 5px;
-    }
-    
-    .forecast h2 {    
-        font-size: 14px;
-        margin-bottom: 1px;
-        margin-top: 1%;
-    }
-}  
+.modal-content {
+    background-color: #fefefe;
+    margin: 15% auto;
+    padding: 20px;
+    border: 1px solid #888;
+    border-radius: 10px;
+    max-width: 600px;
+}
+
+.close {
+    color: #aaa;
+    float: right;
+    font-size: 28px;
+    font-weight: bold;
+}
+
+.close:hover,
+.close:focus {
+    color: black;
+    text-decoration: none;
+    cursor: pointer;
+}
+
+/* Toggle Map Section */
+.weather-map {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    background-color: rgba(0, 0, 0, 0.8);
+    display: none;
+    justify-content: center;
+    align-items: center;
+    z-index: 1000;
+}
+
