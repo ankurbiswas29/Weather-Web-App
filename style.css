@@ -365,7 +365,7 @@ body {
 }
 
 /* Toggle Map Section */
-.weather-map {
+/*.weather-map {
     position: fixed;
     top: 0;
     left: 0;
@@ -376,5 +376,278 @@ body {
     justify-content: center;
     align-items: center;
     z-index: 1000;
+}*/
+
+.weather-map {
+    position: fixed;
+    top: 10px;
+    left: 10px;
+    /* Use flex instead of flexbox */
+    display: inline-block;
+    justify-content: center;
+    align-items: center;
+    /* Reduce z-index or remove if not necessary */
+    z-index: 100px; /* Adjust as needed */
 }
 
+.toggle-map-btn {
+    padding: 10px 20px;
+    font-size: 12px;
+    background-color: #ffffff;
+    color: #333333;
+    border: 2px solid #ffffff;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background-color 0.3s, color 0.3s, border-color 0.3s;
+}
+
+.toggle-map-btn:hover {
+    background-color: #333333;
+    color: #ffffff;
+    border-color: #333333;
+}
+
+
+/*Mobile View*/
+
+@media only screen and (max-width: 600px) {
+
+    body{
+      background-image: url(images/mobilebg.jpg)
+    }
+      
+    .container {
+      width: 90%;
+      padding: 20px; 
+    }  
+
+    .search-box input{
+        width: 80%;
+        font-size: 12px;
+    }
+    
+    .search-box input::placeholder{
+        font-size: 12px;
+        
+    }
+  
+    .search-box button {
+      margin-top: 10px; 
+      width: 20%;
+    }
+
+    .search-box button:hover{
+        font-size: 12px;        
+    }
+    
+    .search-box i{
+        position: absolute;
+        font-size: 20px;
+    }    
+  
+    .weather-box img {
+      width: 20%; 
+      margin-top: 0px;
+      margin-top: -15px;
+    }
+  
+    .weather-box .temperature {
+      font-size: 17px;
+      margin-top: 8px;
+      align-items: center;
+    }
+
+    .weather-box .temperature span{
+        position: absolute;
+        font-size: 1rem;
+    }
+    
+    .weather-box .description{
+        color: #06283D;
+        font-size: 16px;
+    }
+
+    .weather-details{
+        width: 105%;
+        margin-top: -17px;
+        display: flex;
+        justify-content: center;
+        font-size: 1px;
+        
+    }
+  
+    .weather-details .humidity, .weather-details .wind, .weather-details .pressure, .weather-details .uv-index, .weather-details .visibility{
+        display: -ms-grid;
+        align-items: center;
+        width: 25%;
+        height: 105px;
+    }
+        
+    .weather-details .humidity{
+        padding-left: 20px;
+        justify-content: flex-start;
+    }
+    
+    .weather-details .wind{
+        padding: 20px;
+        justify-content: space-between;
+    }
+    
+    .weather-details .pressure {
+        padding: 20px;
+        justify-content: center;
+    }
+    
+    .weather-details .uv-index {
+        padding: 20px;
+        justify-content: space-between; 
+    }
+    
+    .weather-details .visibility {
+        padding-right: 20px;
+        justify-content: flex-end;
+    }
+    
+    .weather-details i{
+        font-size: 20px;
+        margin-right: 10px;
+        margin-top: 6px;
+    }
+    
+    .weather-details span{     
+        font-size: 12px;
+    }    
+    
+    .weather-details p{     
+        font-size: 10px;
+    }    
+    
+    .forecast-details .forecast-card {
+      width: calc(50% - 20px); 
+      margin-bottom: 20px; 
+    }
+  
+    .not-found {
+      margin-top: 20px; 
+    }
+  
+    .not-found img {
+      width: 70%; 
+    }
+
+    .forecast-details {
+      margin-top: 10px;
+      max-width: 100%;
+    }
+
+    .forecast-details .forecast-card {
+        border-radius: 20px;
+        padding: 1px;
+        text-align: center;
+        width: calc(25% - 0px); 
+        height: 120px;     
+        margin: 5px;
+    }
+
+    .forecast-details p {
+        font-size: 10px;  
+        margin-top: 2px;
+        margin-bottom: -2px;}
+    
+    .forecast-details .temperature {
+        font-size: 20px;    
+        margin-bottom: 5px;
+    }
+    
+    .forecast h2 {    
+        font-size: 14px;
+        margin-bottom: 1px;
+        margin-top: 1%;
+    }
+
+    .hourly-forecast {
+        margin-top: 40px;
+        text-align: center;
+    }
+    
+    .hourly-forecast h2 {
+        color: #06283D;
+        font-size: 20px;
+        margin-bottom: 20px;
+    }
+    
+    .hourly-details {
+        display: flex;
+        flex-wrap: nowrap;
+        justify-content: center;
+        overflow-x: auto;
+        padding-bottom: 10px;
+        -webkit-overflow-scrolling: touch; /* For smooth scrolling on iOS */
+    }
+    
+    .hourly-details .hourly-card {
+        background-color: #06283D;
+        border-radius: 30px;
+        padding: 10px;
+        text-align: center;
+        width: 100px;
+        margin: 0 10px;
+        box-shadow: 0 8px 16px rgba(0, 0, 0, 0.1);
+        transition: transform 0.3s ease-in-out;
+        cursor: pointer; /* Add cursor pointer for modal trigger */
+    }
+    
+    .hourly-details .hourly-card:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 12px 20px rgba(0, 0, 0, 0.15);
+    }
+    
+    .hourly-details .hourly-card p {
+        font-size: 14px;
+        color: #ffffff;
+        margin-bottom: 8px;
+    }
+    
+    .hourly-details .hourly-card .temperature {
+        font-size: 20px;
+        font-weight: bold;
+        color: #ffffff;
+        margin-bottom: 5px;
+    }
+    
+    /* Modal */
+    .modal {
+        display: none;
+        position: fixed;
+        z-index: 1;
+        left: 0;
+        top: 0;
+        width: 100%;
+        height: 100%;
+        overflow: auto;
+        background-color: rgba(0, 0, 0, 0.5);
+    }
+    
+    .modal-content {
+        background-color: #fefefe;
+        margin: 15% auto;
+        padding: 20px;
+        border: 1px solid #888;
+        border-radius: 10px;
+        max-width: 600px;
+    }
+    
+    .close {
+        color: #aaa;
+        float: right;
+        font-size: 28px;
+        font-weight: bold;
+    }
+    
+    .close:hover,
+    .close:focus {
+        color: black;
+        text-decoration: none;
+        cursor: pointer;
+    }
+}  

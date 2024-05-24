@@ -201,4 +201,12 @@ window.onclick = function(event) {
     }
 };
 
+
+document.getElementById('toggle-map-btn').addEventListener('click', function() {
+    window.location.href = 'map.html'; // Replace with the actual URL of your new page
 });
+
+});
+
+
+
