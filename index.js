@@ -13,200 +13,300 @@ document.addEventListener('DOMContentLoaded', () => {
     const hourlyForecastBtn = document.getElementById('hourly-forecast-btn');
     const hourlyForecastModal = document.getElementById('hourly-forecast-modal');
     const closeHourlyForecastModal = document.querySelector('.close');
+    const hourlyDetails = document.querySelector('.hourly-details');
 
     const APIKey = 'e6e25c2cecd2759cff082b91f149e349';
 
     search.addEventListener('click', () => {
         const city = document.querySelector('.search-box input').value;
-
-        if (city === '') {
-            return;
-        }
-
-        fetch(`https://api.openweathermap.org/data/2.5/weather?q=${city}&units=metric&appid=${APIKey}`)
-            .then(response => response.json())
-            .then(json => {
-                if (json.cod === '404') {
-                    container.style.height = '400px';
-                    weatherBox.style.display = 'none';
-                    weatherDetails.style.display = 'none';
-                    error404.style.display = 'block';
-                    error404.classList.add('fadeIn');
-                    forecastSection.style.display = 'none';
-                    forecastTitle.style.display = 'none';
-                    return;
-                }
-
-                error404.style.display = 'none';
-                error404.classList.remove('fadeIn');
-
-                const image = document.querySelector('.weather-box img');
-                const temperature = document.querySelector('.weather-box .temperature');
-                const description = document.querySelector('.weather-box .description');
-                const humidity = document.querySelector('.weather-details .humidity span');
-                const wind = document.querySelector('.weather-details .wind span');
-                const pressure = document.querySelector('.weather-details .pressure span');
-                const uvIndex = document.querySelector('.weather-details .uv-index span');
-                const visibility = document.querySelector('.weather-details .visibility span');
-
-                switch (json.weather[0].main) {
-                    case 'Clear':
-                        image.src = 'images/clear.png';
-                        break;
-                    case 'Rain':
-                        image.src = 'images/rain.png';
-                        break;
-                    case 'Snow':
-                        image.src = 'images/snow.png';
-                        break;
-                    case 'Clouds':
-                        image.src = 'images/cloud.png';
-                        break;
-                    case 'Haze':
-                    case 'Mist':
-                        image.src = 'images/mist.png';
-                        break;
-                    default:
-                        image.src = '';
-                }
-
-                temperature.innerHTML = `${parseInt(json.main.temp)}<span>°C</span>`;
-                description.innerHTML = `${json.weather[0].description}`;
-                humidity.innerHTML = `${json.main.humidity}%`;
-                wind.innerHTML = `${parseInt(json.wind.speed)}Km/h`;
-                pressure.innerHTML = `${json.main.pressure}hPa`;
-
-                const sunrise = new Date(json.sys.sunrise * 1000);
-                const sunset = new Date(json.sys.sunset * 1000);
-                const currentTime = new Date();
-
-                if (currentTime > sunrise && currentTime < sunset) {
-                    fetch(`https://api.openweathermap.org/data/2.5/uvi?lat=${json.coord.lat}&lon=${json.coord.lon}&appid=${APIKey}`)
-                        .then(response => response.json())
-                        .then(uvData => {
-                            uvIndex.innerHTML = `${uvData.value}`;
-                        })
-                        .catch(error => {
-                            console.error('Error fetching UV data:', error);
-                            uvIndex.innerHTML = 'N/A';
-                        });
-                } else {
-                    uvIndex.innerHTML = 'Night time';
-                }
-
-                visibility.innerHTML = `${json.visibility / 1000}km`;
-
-                weatherBox.style.display = '';
-                weatherDetails.style.display = '';
-                weatherBox.classList.add('fadeIn');
-                weatherDetails.classList.add('fadeIn');
-                container.style.height = '590px';
-
-                // Fetch hourly forecast from Open-Meteo API
-                const latitude = json.coord.lat;
-                const longitude = json.coord.lon;
-                const timezone = Intl.DateTimeFormat().resolvedOptions().timeZone;
-
-                fetch(`https://api.open-meteo.com/v1/forecast?latitude=${latitude}&longitude=${longitude}&hourly=temperature_2m,precipitation&timezone=${timezone}`)
-                    .then(response => response.json())
-                    .then(data => {
-                        // Clear previous hourly forecast data
-                        const hourlyDetails = document.querySelector('.hourly-details');
-                        hourlyDetails.innerHTML = '';
-
-                        // Filter data for the next 24 hours
-                        const next24HoursData = data.hourly.time.slice(0, 24);
-
-                        // Add new hourly forecast data for the next 24 hours
-                        next24HoursData.forEach((time, index) => {
-                            const forecastCard = document.createElement('div');
-                            forecastCard.classList.add('forecast-card');
-
-                            const date = new Date(time);
-                            const temperature = data.hourly.temperature_2m[index];
-                            const precipitation = data.hourly.precipitation[index];
-
-                            forecastCard.innerHTML = `
-                                <p>${date.toLocaleString()}</p>
-                                <p>Temperature: ${temperature}°C</p>
-                                <p>Precipitation: ${precipitation}mm</p>
-                            `;
-
-                            hourlyDetails.appendChild(forecastCard);
-                        });
-
-                        // Show the hourly forecast section
-                        const hourlyForecastSection = document.querySelector('.hourly-forecast');
-                        hourlyForecastSection.style.display = 'block';
-                    })
-                    .catch(error => {
-                        console.error('Error fetching hourly forecast data:', error);
-                    });
-
-                // Fetch 5-day forecast from OpenWeather API
-                fetch(`https://api.openweathermap.org/data/2.5/forecast?q=${city}&units=metric&appid=${APIKey}`)
-                    .then(response => response.json())
-                    .then(forecastData => {
-                        forecastTitle.textContent = '5-Day Forecast';
-                        forecastDetails.innerHTML = '';
-
-                        const nextFiveDaysData = forecastData.list.filter(item => item.dt_txt.includes('12:00:00'));
-
-                        nextFiveDaysData.forEach(dayData => {
-                            const date = new Date(dayData.dt * 1000);
-                            const forecastCard = document.createElement('div');
-                            forecastCard.classList.add('forecast-card');
-
-                            const day = date.toLocaleDateString('en-US', { weekday: 'short' });
-                            const temp = `${parseInt(dayData.main.temp)}°C`;
-                            const weatherDescription = dayData.weather[0].description;
-
-                            forecastCard.innerHTML = `
-                                <p>${day}</p>
-                                <img src="https://openweathermap.org/img/wn/${dayData.weather[0].icon}.png" alt="${weatherDescription}">
-                                <p>${weatherDescription}</p>
-                                <p>${temp}</p>
-                            `;
-
-                            forecastDetails.appendChild(forecastCard);
-                        });
-                    })
-                    .catch(error => {
-                        console.error('Error fetching 5-day forecast data:', error);
-                    });
-            })
-            .catch(error => {
-                console.error('Error fetching weather data:', error);
-            });
+        if (city === '') return;
+        fetchWeather(city);
     });
 
     toggleMapBtn.addEventListener('click', () => {
         mapContainer.classList.toggle('show-map');
         weatherMap.classList.toggle('hide-map');
     });
-// Function to open the hourly forecast modal
-hourlyForecastBtn.onclick = function() {
-    hourlyForecastModal.style.display = 'block';
-};
 
-// Function to close the hourly forecast modal
-closeHourlyForecastModal.onclick = function() {
-    hourlyForecastModal.style.display = 'none';
-};
+    document.getElementById('toggle-map-btn').addEventListener('click', function() {
+        window.location.href = 'map.html'; // Replace with the actual URL of your new page
+    });
 
-// Function to close the modal when clicking outside of it
-window.onclick = function(event) {
-    if (event.target == hourlyForecastModal) {
+    hourlyForecastBtn.onclick = function() {
+        hourlyForecastModal.style.display = 'block';
+    };
+
+    closeHourlyForecastModal.onclick = function() {
         hourlyForecastModal.style.display = 'none';
+    };
+
+    window.onclick = function(event) {
+        if (event.target == hourlyForecastModal) {
+            hourlyForecastModal.style.display = 'none';
+        }
+    };
+
+    async function fetchWeather(city) {
+        try {
+            const weatherData = await fetchWeatherData(city);
+            if (weatherData.cod === '404') {
+                showError();
+                return;
+            }
+    
+            displayWeather(weatherData);
+            const hourlyData = await fetchHourlyForecast(weatherData.coord.lat, weatherData.coord.lon);
+            displayHourlyForecast(hourlyData);
+            const fiveDayData = await fetchFiveDayForecast(city);
+            if (fiveDayData) {
+                displayFiveDayForecast(fiveDayData);
+            } else {
+                // Handle the case when fetchFiveDayForecast returns null (or handle the error in a different way)
+                forecastTitle.textContent = 'Unable to fetch 5-day forecast';
+                forecastDetails.innerHTML = '';
+            }
+        } catch (error) {
+            console.error('Error fetching weather data:', error);
+        }
     }
-};
 
+    function showError() {
+        container.style.height = '400px';
+        weatherBox.style.display = 'none';
+        weatherDetails.style.display = 'none';
+        error404.style.display = 'block';
+        error404.classList.add('fadeIn');
+        forecastSection.style.display = 'none';
+        forecastTitle.style.display = 'none';
 
-document.getElementById('toggle-map-btn').addEventListener('click', function() {
-    window.location.href = 'map.html'; // Replace with the actual URL of your new page
+        const hourlyForecastBtn = document.getElementById('hourly-forecast-btn');
+        hourlyForecastBtn.style.display = 'none';
+    }
+
+    function displayWeather(data) {
+        error404.style.display = 'none';
+        error404.classList.remove('fadeIn');
+
+        const image = document.querySelector('.weather-box img');
+        const temperature = document.querySelector('.weather-box .temperature');
+        const description = document.querySelector('.weather-box .description');
+        const humidity = document.querySelector('.weather-details .humidity span');
+        const wind = document.querySelector('.weather-details .wind span');
+        const pressure = document.querySelector('.weather-details .pressure span');
+        const uvIndex = document.querySelector('.weather-details .uv-index span');
+        const visibility = document.querySelector('.weather-details .visibility span');
+        const hourlyForecastBtn = document.getElementById('hourly-forecast-btn');
+
+        switch (data.weather[0].main) {
+            case 'Clear':
+                image.src = 'images/clear.png';
+                break;
+            case 'Rain':
+                image.src = 'images/rain.png';
+                break;
+            case 'Snow':
+                image.src = 'images/snow.png';
+                break;
+            case 'Clouds':
+                image.src = 'images/cloud.png';
+                break;
+            case 'Haze':
+            case 'Mist':
+                image.src = 'images/mist.png';
+                break;
+            default:
+                image.src = '';
+        }
+
+        temperature.innerHTML = `${parseInt(data.main.temp)}<span>°C</span>`;
+        description.innerHTML = `${data.weather[0].description}`;
+        humidity.innerHTML = `${data.main.humidity}%`;
+        wind.innerHTML = `${parseInt(data.wind.speed)}Km/h`;
+        pressure.innerHTML = `${data.main.pressure}hPa`;
+
+        const sunrise = new Date(data.sys.sunrise * 1000);
+        const sunset = new Date(data.sys.sunset * 1000);
+        const currentTime = new Date();
+
+        if (currentTime > sunrise && currentTime < sunset) {
+            fetch(`https://api.openweathermap.org/data/2.5/uvi?lat=${data.coord.lat}&lon=${data.coord.lon}&appid=${APIKey}`)
+                .then(response => response.json())
+                .then(uvData => {
+                    uvIndex.innerHTML = `${uvData.value}`;
+                })
+                .catch(error => {
+                    console.error('Error fetching UV data:', error);
+                    uvIndex.innerHTML = 'N/A';
+                });
+        } else {
+            uvIndex.innerHTML = 'Night time';
+        }
+
+        visibility.innerHTML = `${data.visibility / 1000}km`;
+
+        weatherBox.style.display = '';
+        weatherDetails.style.display = '';
+        weatherBox.classList.add('fadeIn');
+        weatherDetails.classList.add('fadeIn');
+        container.style.height = '590px';
+        hourlyForecastBtn.style.display = 'flex';
+    }
+
+    async function fetchHourlyForecast(latitude, longitude) {
+        const timezone = Intl.DateTimeFormat().resolvedOptions().timeZone;
+        const response = await fetch(`https://api.open-meteo.com/v1/forecast?latitude=${latitude}&longitude=${longitude}&hourly=temperature_2m,precipitation&timezone=${timezone}`);
+        return response.json();
+    }
+
+    function displayHourlyForecast(data) {
+        hourlyDetails.innerHTML = '';
+
+        const next24HoursData = data.hourly.time.slice(0, 24);
+
+        next24HoursData.forEach((time, index) => {
+            const forecastCard = document.createElement('div');
+            forecastCard.classList.add('hourly-card');
+        
+            const date = new Date(time);
+            const temperature = data.hourly.temperature_2m[index];
+            const precipitation = data.hourly.precipitation[index];
+        
+            forecastCard.innerHTML = `
+                <p>${date.toLocaleString()}</p>
+                <p class="temperature">${temperature}°C</p>
+                <p class="precipitation">${precipitation}mm</p>
+            `;
+        
+            hourlyDetails.appendChild(forecastCard);
+        });
+
+        const hourlyForecastSection = document.querySelector('.hourly-forecast');
+        hourlyForecastSection.style.display = 'block';
+    }
+
+    async function fetchFiveDayForecast(city) {
+        try {
+            const response = await fetch(`https://api.openweathermap.org/data/2.5/forecast?q=${city}&units=metric&appid=${APIKey}`);
+            if (!response.ok) {
+                throw new Error(`Error fetching 5-day forecast: ${response.status}`);
+            }
+            return response.json();
+        } catch (error) {
+            console.error('Error fetching 5-day forecast:', error);
+            return null; // Return null or handle the error in a different way
+        }
+    }
+
+    function displayFiveDayForecast(data) {
+        if (!data || !data.list || data.list.length === 0) {
+            // Handle the case when the API response is invalid or missing data
+            forecastTitle.textContent = 'Unable to fetch 5-day forecast';
+            forecastDetails.innerHTML = '';
+            return;
+        }
+    
+        forecastTitle.textContent = '5-Day Forecast';
+        forecastDetails.innerHTML = '';
+    
+        const nextFiveDaysData = data.list.filter(item => item.dt_txt.includes('12:00:00'));
+    
+        nextFiveDaysData.forEach(dayData => {
+            const date = new Date(dayData.dt * 1000);
+            const forecastCard = document.createElement('div');
+            forecastCard.classList.add('forecast-card');
+    
+            const day = date.toLocaleDateString('en-US', { weekday: 'short' });
+            const temp = `${parseInt(dayData.main.temp)}°C`;
+            const weatherDescription = dayData.weather[0].description;
+    
+            forecastCard.innerHTML = `
+                <p>${day}</p>
+                <img src="https://openweathermap.org/img/wn/${dayData.weather[0].icon}.png" alt="${weatherDescription}">
+                <p>${weatherDescription}</p>
+                <p>${temp}</p>
+            `;
+    
+            forecastDetails.appendChild(forecastCard);
+        });
+    }
+
+    async function fetchWeatherData(location) {
+        try {
+            const response = await fetch(`https://api.openweathermap.org/data/2.5/weather?q=${location}&units=metric&appid=${APIKey}`);
+            return response.json();
+        } catch (error) {
+            console.error('Error fetching weather data:', error);
+            throw error;
+        }
+    }
+
+    async function handleWeatherQuery(userInput) {
+        const location = userInput.trim();
+
+        if (!location) {
+            return "Please provide a location to get weather information.";
+        }
+
+        try {
+            const promptGemini = `What is the weather like in ${location}?`;
+            const geminiResponse = await fetchGeminiResponse(promptGemini);
+
+            if (geminiResponse.result) {
+                return geminiResponse.result;
+            }
+
+            const openWeatherData = await fetchWeatherData(location);
+            if (openWeatherData.cod === 200) {
+                const weatherDescription = openWeatherData.weather[0].description;
+                const temperature = `${parseInt(openWeatherData.main.temp)}°C`;
+                return `The weather in ${location} is ${weatherDescription} with a temperature of ${temperature}.`;
+            }
+
+            const openMeteoData = await fetchWeatherDataOpenMeteo(location);
+            if (openMeteoData && openMeteoData.hourly && openMeteoData.hourly.temperature_2m) {
+                const temperature = openMeteoData.hourly.temperature_2m[0];
+                return `The temperature in ${location} is ${temperature}°C according to Open-Meteo data.`;
+            }
+
+            return `Sorry, I couldn't find weather data for ${location}.`;
+        } catch (error) {
+            console.error('Error in handleWeatherQuery:', error);
+            throw error;
+        }
+    }
+
+    async function fetchGeminiResponse(prompt) {
+        const apiKey = 'YOUR_API_KEY'; // Replace with your actual API key
+        const apiEndpoint = 'https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash-latest:generateContent';
+
+        const requestBody = { "prompt": prompt };
+        const requestOptions = {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'Authorization': `Bearer ${apiKey}`
+            },
+            body: JSON.stringify(requestBody)
+        };
+
+        try {
+            const response = await fetch(apiEndpoint, requestOptions);
+            return response.json();
+        } catch (error) {
+            console.error('Error fetching Gemini response:', error);
+            throw error;
+        }
+    }
+
+    async function fetchWeatherDataOpenMeteo(location) {
+        const geocodeResponse = await fetch(`https://api.openweathermap.org/data/2.5/weather?q=${location}&appid=${APIKey}`);
+        const geocodeData = await geocodeResponse.json();
+        const latitude = geocodeData.coord.lat;
+        const longitude = geocodeData.coord.lon;
+        const timezone = Intl.DateTimeFormat().resolvedOptions().timeZone;
+
+        const response = await fetch(`https://api.open-meteo.com/v1/forecast?latitude=${latitude}&longitude=${longitude}&hourly=temperature_2m,precipitation&timezone=${timezone}`);
+        return response.json();
+    }
 });
-
-});
-
-
 

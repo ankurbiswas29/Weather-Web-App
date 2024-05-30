@@ -75,7 +75,6 @@
             <div class="forecast-details"></div>
         </div>
 
-        <button id="hourly-forecast-btn">Hourly Forecast</button>
         <div id="hourly-forecast-modal" class="modal">
             <div class="modal-content">
                 <span class="close">&times;</span>
@@ -87,16 +86,31 @@
                 </div>
             </div>
         </div>
-        
+        <button id="hourly-forecast-btn">Hourly Forecast</button>
+
     </div>
+
 
     <div class="weather-map">
         <button id="toggle-map-btn" class="toggle-map-btn">Toggle Weather Map</button>
         <div class="map-container"></div>
     </div>
 
+    
+ <!-- Chatbot Container -->
+ <div class="chat-container">
+    <div class="chat-header">
+        <h1>Weather Chatbot</h1>
+    </div>
+    <form class="chat-form">
+        <input type="text" placeholder="Ask about the weather..." />
+        <button type="submit">Ask</button>
+    </form>
+    <div class="chat-response"></div>
+</div>
+
     <script src="https://kit.fontawesome.com/7c8801c017.js" crossorigin="anonymous"></script>
-    <script src="index.js"></script>
+    <script src="index.js"></script>    
 </body>
 
 </html>
