@@ -14,6 +14,10 @@ document.addEventListener('DOMContentLoaded', () => {
     const hourlyForecastModal = document.getElementById('hourly-forecast-modal');
     const closeHourlyForecastModal = document.querySelector('.close');
     const hourlyDetails = document.querySelector('.hourly-details');
+    const form = document.querySelector('form');
+    const chatForm = document.querySelector('.chat-form');
+    const chatInput = chatForm.querySelector('input[name="chatbot"]');
+    const chatResponse = document.querySelector('.chat-response');
 
     const APIKey = 'e6e25c2cecd2759cff082b91f149e349';
 
@@ -23,13 +27,45 @@ document.addEventListener('DOMContentLoaded', () => {
         fetchWeather(city);
     });
 
-    toggleMapBtn.addEventListener('click', () => {
-        mapContainer.classList.toggle('show-map');
-        weatherMap.classList.toggle('hide-map');
-    });
-
     document.getElementById('toggle-map-btn').addEventListener('click', function() {
         window.location.href = 'map.html'; // Replace with the actual URL of your new page
+    });
+
+
+    chatForm.addEventListener('submit', async (event) => {
+        event.preventDefault();
+        const userInput = chatInput.value.trim();
+    
+        if (!userInput) {
+            chatResponse.textContent = 'Please enter a valid query.';
+            return;
+        }
+    
+        console.log('User Input:', userInput); // Add this line for debugging
+    
+        try {
+            const response = await fetch('/api/chatbot', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({ userInput }),
+            });
+    
+            const data = await response.json();
+            console.log('Server response:', data); // Log the server response
+    
+            if (response.ok) {
+                chatResponse.textContent = data.response; // Assuming the server sends { response: 'Weather in location: description, Temperature: temperature°C. Gemini data' }
+            } else {
+                chatResponse.textContent = 'An error occurred while processing the query.';
+            }
+        } catch (error) {
+            console.error('Error:', error);
+            chatResponse.textContent = 'An error occurred while processing the query.';
+        }
+    
+        chatInput.value = '';
     });
 
     hourlyForecastBtn.onclick = function() {
@@ -70,6 +106,7 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     }
 
+    
     function showError() {
         container.style.height = '400px';
         weatherBox.style.display = 'none';
@@ -242,59 +279,29 @@ document.addEventListener('DOMContentLoaded', () => {
 
     async function handleWeatherQuery(userInput) {
         const location = userInput.trim();
-
+    
         if (!location) {
             return "Please provide a location to get weather information.";
         }
-
+    
         try {
-            const promptGemini = `What is the weather like in ${location}?`;
-            const geminiResponse = await fetchGeminiResponse(promptGemini);
-
-            if (geminiResponse.result) {
-                return geminiResponse.result;
-            }
-
             const openWeatherData = await fetchWeatherData(location);
             if (openWeatherData.cod === 200) {
                 const weatherDescription = openWeatherData.weather[0].description;
                 const temperature = `${parseInt(openWeatherData.main.temp)}°C`;
                 return `The weather in ${location} is ${weatherDescription} with a temperature of ${temperature}.`;
             }
-
+    
             const openMeteoData = await fetchWeatherDataOpenMeteo(location);
             if (openMeteoData && openMeteoData.hourly && openMeteoData.hourly.temperature_2m) {
                 const temperature = openMeteoData.hourly.temperature_2m[0];
                 return `The temperature in ${location} is ${temperature}°C according to Open-Meteo data.`;
             }
-
+    
             return `Sorry, I couldn't find weather data for ${location}.`;
         } catch (error) {
             console.error('Error in handleWeatherQuery:', error);
-            throw error;
-        }
-    }
-
-    async function fetchGeminiResponse(prompt) {
-        const apiKey = 'YOUR_API_KEY'; // Replace with your actual API key
-        const apiEndpoint = 'https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash-latest:generateContent';
-
-        const requestBody = { "prompt": prompt };
-        const requestOptions = {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-                'Authorization': `Bearer ${apiKey}`
-            },
-            body: JSON.stringify(requestBody)
-        };
-
-        try {
-            const response = await fetch(apiEndpoint, requestOptions);
-            return response.json();
-        } catch (error) {
-            console.error('Error fetching Gemini response:', error);
-            throw error;
+            return 'An error occurred while processing the weather query.';
         }
     }
 
