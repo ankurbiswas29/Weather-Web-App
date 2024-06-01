@@ -42,26 +42,27 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     
         try {
-            const response = await fetch('http://192.168.0.4:5500/api/ai/weather', {  // Ensure the correct endpoint
+            const response = await fetch('http://localhost:5500/api/ai/weather', {  // Ensure the correct endpoint
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
                 },
                 body: JSON.stringify({ userInput }),
             });
-    
+        
             if (!response.ok) {
                 const errorData = await response.json();
                 chatResponse.textContent = errorData.error || 'An error occurred while processing the query.';
                 return;
             }
-    
+        
             const data = await response.json();
             chatResponse.textContent = data.response;
         } catch (error) {
             console.error('Error:', error);
             chatResponse.textContent = 'Network error occurred while processing the query.';
         }
+        
     
         chatInput.value = '';
     });
