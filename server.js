@@ -6,16 +6,23 @@ const { GoogleGenerativeAI } = require('@google/generative-ai');
 const app = express();
 const port = 5500;
 
-const GEMINI_API_KEY = 'AIzaSyAX9uJgItUcY-rh_BtRbCW_IH_57GH3Tg0'; // Replace with your actual Gemini API key
-const OPENWEATHER_API_KEY = 'e6e25c2cecd2759cff082b91f149e349'; // Replace with your actual OpenWeatherMap API key
+const GEMINI_API_KEY = 'AIzaSyAX9uJgItUcY-rh_BtRbCW_IH_57GH3Tg0'; 
+const OPENWEATHER_API_KEY = 'e6e25c2cecd2759cff082b91f149e349'; 
 
 const genAI = new GoogleGenerativeAI(GEMINI_API_KEY);
 
 app.use(cors());
 app.use(express.json());
 
-app.post('/api/chatbot', (req, res) => {
-    res.send('Welcome to the Weather-App API.');
+app.use((req, res, next) => {
+    res.header('Access-Control-Allow-Origin', '*');
+    res.header('Access-Control-Allow-Methods', 'GET,POST,PUT,DELETE,OPTIONS');
+    res.header('Access-Control-Allow-Headers', 'Content-Type, Authorization');
+    if ('OPTIONS' === req.method) {
+        res.sendStatus(200);
+    } else {
+        next();
+    }
 });
 
 // Function to parse user input using Gemini API
@@ -46,13 +53,11 @@ const parseUserInput = async (input) => {
             result.response.candidates[0].content.parts[0] &&
             result.response.candidates[0].content.parts[0].text
         ) {
-            // Extract JSON data from the response
             const jsonString = result.response.candidates[0].content.parts[0].text
                 .replace('```json\n', '') // Remove code block start
                 .replace('\n``` \n', ''); // Remove code block end and extra newline
 
             const parsedResponse = JSON.parse(jsonString);
-            // Extract location and intent from the parsed response
             const { location, intent } = parsedResponse;
             return { location, intent };
         } else {
@@ -94,14 +99,12 @@ app.post('/api/ai/weather', async (req, res) => {
     }
 
     try {
-        // Parse user input to identify location and intent
         const { location, intent } = await parseUserInput(userInput);
 
         if (!location) {
             return res.status(400).json({ error: 'Location not found in the query' });
         }
 
-        // Retrieve weather data
         const weatherData = await getWeatherData(location);
         const temperature = weatherData.main.temp;
         const description = weatherData.weather?.[0]?.description || 'N/A';
@@ -109,7 +112,6 @@ app.post('/api/ai/weather', async (req, res) => {
 
         let geminiData = 'N/A';
 
-        // Use Gemini API for generating human-like responses
         try {
             const model = genAI.getGenerativeModel({ model: 'gemini-1.5-flash' });
             const result = await model.generateContent({
@@ -132,7 +134,6 @@ app.post('/api/ai/weather', async (req, res) => {
             console.error('Error processing Gemini API:', geminiError);
         }
 
-        // Provide appropriate responses based on query type
         let responseText = `Weather in ${location}: ${description}, Temperature: ${temperature}°C. ${geminiData}`;
         if (intent.includes('rain')) {
             responseText += ` Precipitation: ${precipitation}.`;
@@ -148,4 +149,3 @@ app.post('/api/ai/weather', async (req, res) => {
 app.listen(port, () => {
     console.log(`Server running on port ${port}`);
 });
-

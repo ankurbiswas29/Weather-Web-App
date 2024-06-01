@@ -28,7 +28,7 @@ document.addEventListener('DOMContentLoaded', () => {
     });
 
     document.getElementById('toggle-map-btn').addEventListener('click', function() {
-        window.location.href = 'map.html'; // Replace with the actual URL of your new page
+        window.location.href = 'map.html'; 
     });
 
 
@@ -41,10 +41,8 @@ document.addEventListener('DOMContentLoaded', () => {
             return;
         }
     
-        console.log('User Input:', userInput); // Add this line for debugging
-    
         try {
-            const response = await fetch('/api/chatbot', {
+            const response = await fetch('http://192.168.0.4:5500/api/ai/weather', {  // Ensure the correct endpoint
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
@@ -52,22 +50,22 @@ document.addEventListener('DOMContentLoaded', () => {
                 body: JSON.stringify({ userInput }),
             });
     
-            const data = await response.json();
-            console.log('Server response:', data); // Log the server response
-    
-            if (response.ok) {
-                chatResponse.textContent = data.response; // Assuming the server sends { response: 'Weather in location: description, Temperature: temperature°C. Gemini data' }
-            } else {
-                chatResponse.textContent = 'An error occurred while processing the query.';
+            if (!response.ok) {
+                const errorData = await response.json();
+                chatResponse.textContent = errorData.error || 'An error occurred while processing the query.';
+                return;
             }
+    
+            const data = await response.json();
+            chatResponse.textContent = data.response;
         } catch (error) {
             console.error('Error:', error);
-            chatResponse.textContent = 'An error occurred while processing the query.';
+            chatResponse.textContent = 'Network error occurred while processing the query.';
         }
     
         chatInput.value = '';
     });
-
+    
     hourlyForecastBtn.onclick = function() {
         hourlyForecastModal.style.display = 'block';
     };
