@@ -8,7 +8,7 @@ const { GoogleGenerativeAI } = require('@google/generative-ai');
 const app = express();
 const port = process.env.PORT || 5500;
 
-app.use(express.static(path.join(__dirname,'frontend')));
+app.use(express.static(path.join(__dirname, '..', 'frontend')));
 
 const GEMINI_API_KEY = process.env.GEMINI_API_KEY;
 const OPENWEATHER_API_KEY = process.env.OPENWEATHER_API_KEY;
@@ -183,15 +183,32 @@ const sendWeatherToGemini = async (weatherData, location, intent) => {
 
        if (result && result.response && result.response.candidates && result.response.candidates[0] && result.response.candidates[0].content.parts[0].text) {
            const finalResponse = result.response.candidates[0].content.parts[0].text;
+           
+           // Define patterns for unnecessary information
+           const patternsToRemove = [
+            /Here are some options for responding:[\s\S]*/, // Remove example response or suggestions
+            /You could say something like:[\s\S]*/, // Remove example prompts
+            /\*\*To provide a more comprehensive answer[\s\S]*\*\*/, // Remove comprehensive answer prompts
+            /If you want to be more specific, you could mention that\./, // Remove further specific suggestion
+            /^Here's a response to the user's query about the weather[\s\S]*/, // Remove introductory line
+            /\*\*Option \d+:[\s\S]*\*\*/, // Remove option descriptions
+            /\*\*Important Considerations:\*\*[\s\S]*/, // Remove important considerations section
+            /\*[\s\S]*\*/, // Remove bullet points and their content
+            /Here's how you can respond to the user's query about the[\s\S]*/, // Remove introductory line
+            /Remember to always provide accurate and up-to-date information\./, // Remove closing reminder
+            /You could also suggest[\s\S]*$/ // Remove "You could also suggest" section
+        ];
        
-           // Here you can decide how to filter or process the final response before returning it to the user
-           const filteredResponse = finalResponse.replace(/Here are some options for responding:[\s\S]*/, '');
+           // Apply each pattern to remove unnecessary info
+           let filteredResponse = finalResponse;
+           patternsToRemove.forEach(pattern => {
+               filteredResponse = filteredResponse.replace(pattern, '');
+           });
        
            /*console.log('Final filtered response:', filteredResponse); // Optional log for debugging*/
            
            return filteredResponse; // This is the filtered response that will be sent to the user
        }
-       
 } catch (geminiError) {
     console.error('Error processing Gemini API:', geminiError);
     throw geminiError;

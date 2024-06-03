@@ -62,7 +62,8 @@ document.addEventListener('DOMContentLoaded', () => {
 
     document.addEventListener('click', (event) => {
         const isClickInsideChat = chatForm.contains(event.target);
-        if (!isClickInsideChat) {
+        const isClickInsideChatbot = chatbotContainer.contains(event.target);
+        if (!isClickInsideChat&&!isClickInsideChatbot) {
             // Clear the chat response area
             chatResponse.textContent = '';
         }
